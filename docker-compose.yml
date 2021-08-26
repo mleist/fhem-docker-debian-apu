@@ -1,0 +1,83 @@
+version: '3.8'
+services:
+    dbms:
+        image: postgres:13-alpine
+        restart: always
+        environment:
+          - POSTGRES_USER=postgres
+          - POSTGRES_PASSWORD=passw0rd
+        networks:
+            - fhem-network
+        logging:
+          options:
+            max-size: 10m
+            max-file: "3"
+        ports:
+          - '55432:5432'
+        volumes: 
+          - ./psql_data:/var/lib/postgresql/data
+          # copy the sql script to create tables
+          - ./sql/create_tables.sql:/docker-entrypoint-initdb.d/create_tables.sql
+        # user: '501:20'
+    fhem:
+        restart: always
+        ports:
+            - "8083:8083"
+            - "7072:7072"
+        image: fhem/fhem:latest
+        volumes:
+            - ./fhem:/opt/fhem/
+        # user: '501:20'
+        environment:
+            FHEM_UID: 1000
+            FHEM_GID: 1000
+            TIMEOUT: 10
+            RESTART: 1
+            TELNETPORT: 7072
+            TZ: Europe/Berlin
+            CONFIGTYPE: configDB
+        networks:
+            - fhem-network
+        depends_on:
+            - "dbms"
+#    influxdb:
+#        image: influxdb:latest
+#        ports:
+#            - '8086:8086'
+#        volumes:
+#            - influxdb-storage:/var/lib/influxdb
+#        environment:
+#            - INFLUXDB_DB=db0
+#            - INFLUXDB_ADMIN_USER=${INFLUXDB_USERNAME}
+#            - INFLUXDB_ADMIN_PASSWORD=${INFLUXDB_PASSWORD}
+#    chronograf:
+#        image: chronograf:latest
+#        ports:
+#            - '127.0.0.1:8888:8888'
+#        volumes:
+#            - chronograf-storage:/var/lib/chronograf
+#        depends_on:
+#            - influxdb
+#        environment:
+#            - INFLUXDB_URL=http://influxdb:8086
+#            - INFLUXDB_USERNAME=${INFLUXDB_USERNAME}
+#            - INFLUXDB_PASSWORD=${INFLUXDB_PASSWORD}
+#    grafana:
+#        image: grafana/grafana:latest
+#        ports:
+#            - '3000:3000'
+#        volumes:
+#            - grafana-storage:/var/lib/grafana
+#            - ./grafana-provisioning/:/etc/grafana/provisioning
+#        depends_on:
+#            - influxdb
+#        environment:
+#            - GF_SECURITY_ADMIN_USER=${GRAFANA_USERNAME}
+#            - GF_SECURITY_ADMIN_PASSWORD=${GRAFANA_PASSWORD}
+#volumes:
+#    influxdb-storage:
+#    chronograf-storage:
+#    grafana-storage:
+networks:
+    fhem-network:
+        driver: bridge
