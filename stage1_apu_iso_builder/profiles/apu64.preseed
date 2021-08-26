@@ -121,14 +121,37 @@ d-i hw-detect/load_firmware boolean true
 #    in-target rm -f /EMPTY;
 
 d-i preseed/late_command string \
+    wget https://raw.githubusercontent.com/mleist/fhem-docker-debian-apu/main/stage3_postinstall_apu/first_boot.sh -O /target/root/first_boot.sh ; \
     in-target sed -i 's/#PasswordAuthentication yes/PasswordAuthentication no/g' /etc/ssh/sshd_config; \
     in-target mkdir -p /root/.ssh; \
     in-target /bin/sh -c "echo 'ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIIoXku5KhFDsMDtgl+B2dearBactbDVDlucW0cdM78da markus@lei.st' >> /root/.ssh/authorized_keys"; \
-    in-target chown -R root:root /root/.ssh; \
-    in-target /bin/sh -c "echo 'deb http://packages.azlux.fr/debian/ buster main' | tee /etc/apt/sources.list.d/azlux.list"; \
-    in-target /bin/sh -c "wget -qO - https://azlux.fr/repo.gpg.key | apt-key add -"; \
-    in-target /bin/sh -c "apt update"; \
-    in-target /bin/sh -c "apt install docker-ctop";
+    in-target chown -R root:root /root/.ssh;
+
+
+#    in-target /bin/sh -c "echo 'deb http://packages.azlux.fr/debian/ buster main' | tee /etc/apt/sources.list.d/azlux.list"; \
+#    in-target /bin/sh -c "wget -qO - https://azlux.fr/repo.gpg.key | apt-key add -"; \
+#    in-target /bin/sh -c "apt update"; \
+#    in-target /bin/sh -c "apt install docker-ctop";
+
+#d-i preseed/late_command string \
+#cd /target/etc/apt/; \
+#wget http://repo.example.com/sources_new.list; \
+#mv sources_new.list sources.list; \
+#echo 'Acquire::http::Proxy "http://proxy.example.org";' >> apt.conf; \
+#ls . > temp; \
+#cat temp | grep -cq string; \
+#cd /; \
+#in-target apt-get update; \
+#in-target apt-get -y upgrade; \
+#in-target apt-get -y dist-upgrade; \
+#in-target tasksel install desktop; \
+#in-target apt-get -y install sudo \
+#less \
+#ssh \
+#icedove \
+#lynx \
+#xscreensaver;
+
 
 #    in-target /bin/sh -c "curl -fsSL https://download.docker.com/linux/debian/gpg | gpg --dearmor -o /usr/share/keyrings/docker-archive-keyring.gpg"; \
 #    in-target /bin/sh -c ""; \
