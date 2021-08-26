@@ -458,5 +458,7 @@ d-i preseed/late_command string \
     in-target mkdir -p /root/.ssh; \
     in-target /bin/sh -c "ssh-keyscan -H github.com >> /root/.ssh/known_hosts"; \
     in-target /bin/sh -c "echo 'ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIIoXku5KhFDsMDtgl+B2dearBactbDVDlucW0cdM78da markus@lei.st' >> /root/.ssh/authorized_keys"; \
-    in-target chown -R root:root /root/.ssh; \
-    in-target /bin/sh -c "cd /opt; git clone git@github.com:mleist/fhem-docker-debian-apu.git";
+    in-target chown -R root:root /root/.ssh;
+
+# chroot /target ...
+# in-target /bin/sh -c "cd /opt; git clone git@github.com:mleist/fhem-docker-debian-apu.git";
