@@ -13,9 +13,18 @@
 - Press F10
 - wait for installed system
 
+**Attention: for my work I have injected my ssh-key into the Stage0 system**
+
 
 
 ## login into stage0 VM
 
 - username: root
 - password: r00tme
+
+> root@debian:~# /bin/sh -c "cd /opt; git clone git@github.com:mleist/fhem-docker-debian-apu.git"
+>
+> root@debian:~# cd /opt/fhem-docker-debian-apu/stage1_apu_iso_builder/
+>
+> root@stage0tmp:/opt/fhem-docker-debian-apu/stage1_apu_iso_builder#
+> 
