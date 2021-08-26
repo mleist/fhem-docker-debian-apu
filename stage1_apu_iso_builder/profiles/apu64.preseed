@@ -1,0 +1,142 @@
+# set the deadline scheduler globally for better SSD performance
+d-i debian-installer/add-kernel-opts string video=off\
+ elevator=deadline console=ttyS0,115200
+
+# Skip creation of a normal user account.
+d-i passwd/make-user boolean false
+
+
+# Any hostname and domain names assigned from dhcp take precedence over
+# values set here. However, setting the values still prevents the questions
+# from being shown, even if values come from dhcp.
+d-i netcfg/get_hostname string ha-apu1
+# d-i netcfg/get_hostname seen false
+
+d-i netcfg/choose_interface select enp1s0
+
+# Automatically label the disk without asking
+d-i partman-auto/choose_recipe select boot-root
+d-i partman-partitioning/confirm_write_new_label boolean true
+d-i partman/choose_partition select finish
+d-i partman/confirm boolean true
+d-i partman/confirm_nooverwrite boolean true
+d-i partman-auto/disk string /dev/sda
+d-i partman-auto/purge_lvm_from_device boolean true
+d-i partman-lvm/confirm boolean true
+
+# Disk partitioning method
+d-i partman-auto/method string regular
+
+# Custom partition layout: both /boot and root in ext4, with noatime option
+d-i partman-auto/expert_recipe string                         \
+      boot-root ::                                            \
+              128 50 128 ext4                                 \
+                      $primary{ } $bootable{ }                \
+                      method{ format } format{ }              \
+                      use_filesystem{ } filesystem{ ext4 }    \
+                      mountpoint{ /boot }                     \
+                      options/noatime{ noatime }              \
+              .                                               \
+              500 10000 -1 ext4                               \
+                      method{ format } format{ }              \
+                      use_filesystem{ } filesystem{ ext4 }    \
+                      mountpoint{ / }                         \
+                      options/noatime{ noatime }              \
+              .                                               \
+              4096 4096 4096 ext4                             \
+                      $primary{ }                             \
+                      method{ format } format{ }              \
+                      use_filesystem{ } filesystem{ ext4 }    \
+                      mountpoint{ /backups }                  \
+                      options/noatime{ noatime }              \
+              .
+
+# Skip question about not having swap partition
+partman-basicfilesystems partman-basicfilesystems/no_swap boolean false
+
+
+d-i grub-installer/with_other_os  boolean false
+d-i grub-installer/bootdev  string default
+
+# The kernel image (meta) package to be installed; "none" can be used if no
+# kernel is to be installed.
+d-i base-installer/kernel/image string linux-image-amd64
+
+### Set the clock during installation
+d-i clock-setup/utc boolean true
+d-i clock-setup/ntp boolean true
+d-i clock-setup/ntp-server string pool.ntp.org
+
+# By default the installer requires that repositories be authenticated
+# using a known gpg key. Comment out this to disable that
+# authentication. Warning: Insecure, not recommended.
+# d-i debian-installer/allow_unauthenticated boolean true
+
+
+# Some versions of the installer can report back on what software you have
+# installed, and what software you use. The default is not to report back,
+# but sending reports helps the project determine what software is most
+# popular and include it on CDs.
+popularity-contest popularity-contest/participate boolean false
+
+#####
+## Things you may want to change ##
+
+d-i debian-installer/locale string en_US.UTF-8
+d-i debian-installer/language string en
+d-i debian-installer/country string DE
+
+d-i time/zone string Europe/Berlin
+
+passwd   passwd/root-password    password passw0rd
+passwd   passwd/root-password-again  password passw0rd
+
+d-i mirror/protocol string http
+d-i mirror/country string manual
+d-i mirror/http/hostname string deb.debian.org
+d-i mirror/http/directory string /debian
+d-i mirror/http/proxy string
+
+tasksel tasksel/first multiselect ssh-server 
+d-i pkgsel/include string joe aptitude rsync docker-compose wget
+d-i pkgsel/upgrade select none
+
+# Disable that annoying WEP key dialog.
+d-i netcfg/wireless_wep string
+# Allow non-free firmware
+d-i hw-detect/load_firmware boolean true
+
+#d-i preseed/late_command string \
+#    in-target sed -i 's/^%sudo.*$/%sudo ALL=(ALL:ALL) NOPASSWD: ALL/g' /etc/sudoers; \
+#    in-target /bin/sh -c "echo 'Defaults env_keep += \"SSH_AUTH_SOCK\"' >> /etc/sudoers"; \
+#    in-target mkdir -p /home/vagrant/.ssh; \
+#    in-target /bin/sh -c "echo 'ssh-rsa AAAAB3NzaC1yc2EAAAABIwAAAQEA6NF8iallvQVp22WDkTkyrtvp9eWW6A8YVr+kz4TjGYe7gHzIw+niNltGEFHzD8+v1I2YJ6oXevct1YeS0o9HZyN1Q9qgCgzUFtdOKLv6IedplqoPkcmF0aYet2PkEDo3MlTBckFXPITAMzF8dJSIFo9D8HfdOV0IAdx4O7PtixWKn5y2hMNG0zQPyUecp4pzC6kivAIhyfHilFR61RGL+GPXQ2MWZWFYbAGjyiYJnAmCP3NOTd0jMZEnDkbUvxhMmBYSdETk1rRgm+R4LOzFUGaHqHDLKLX+FIPKcF96hrucXzcWyLbIbEgE98OHlnVYCzRdK8jlqm8tehUc9c9WhQ== vagrant insecure public key' >> /home/vagrant/.ssh/authorized_keys"; \
+#    in-target chown -R vagrant:vagrant /home/vagrant/; \
+#    in-target chmod -R go-rwx /home/vagrant/authorized_keys; \
+#    in-target sed -i 's/PermitRootLogin yes/PermitRootLogin no/g' /etc/ssh/sshd_config; \
+#    in-target sed -i 's/#PasswordAuthentication yes/PasswordAuthentication no/g' /etc/ssh/sshd_config; \
+#    in-target rm /etc/udev/rules.d/70-persistent-net.rules; \
+#    in-target aptitude clean; \
+#    in-target dd if=/dev/zero of=/EMPTY bs=1M; \
+#    in-target rm -f /EMPTY;
+
+d-i preseed/late_command string \
+    in-target sed -i 's/#PasswordAuthentication yes/PasswordAuthentication no/g' /etc/ssh/sshd_config; \
+    in-target mkdir -p /root/.ssh; \
+    in-target /bin/sh -c "echo 'ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIIoXku5KhFDsMDtgl+B2dearBactbDVDlucW0cdM78da markus@lei.st' >> /root/.ssh/authorized_keys"; \
+    in-target chown -R root:root /root/.ssh; \
+    in-target /bin/sh -c "echo 'deb http://packages.azlux.fr/debian/ buster main' | tee /etc/apt/sources.list.d/azlux.list"; \
+    in-target /bin/sh -c "wget -qO - https://azlux.fr/repo.gpg.key | apt-key add -"; \
+    in-target /bin/sh -c "apt update"; \
+    in-target /bin/sh -c "apt install docker-ctop";
+
+#    in-target /bin/sh -c "curl -fsSL https://download.docker.com/linux/debian/gpg | gpg --dearmor -o /usr/share/keyrings/docker-archive-keyring.gpg"; \
+#    in-target /bin/sh -c ""; \
+#    in-target /bin/sh -c ""; \
+#    in-target /bin/sh -c ""; \
+
+
+
+### halt when finished
+# d-i debian-installer/exit/halt boolean true
+d-i debian-installer/exit/poweroff boolean true
