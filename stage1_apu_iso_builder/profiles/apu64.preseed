@@ -122,6 +122,7 @@ d-i hw-detect/load_firmware boolean true
 
 d-i preseed/late_command string \
     wget https://raw.githubusercontent.com/mleist/fhem-docker-debian-apu/main/stage3_postinstall_apu/first_boot.sh -O /target/root/first_boot.sh ; \
+    chmod 700 /target/root/first_boot.sh; \
     in-target sed -i 's/#PasswordAuthentication yes/PasswordAuthentication no/g' /etc/ssh/sshd_config; \
     in-target mkdir -p /root/.ssh; \
     in-target /bin/sh -c "echo 'ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIIoXku5KhFDsMDtgl+B2dearBactbDVDlucW0cdM78da markus@lei.st' >> /root/.ssh/authorized_keys"; \
