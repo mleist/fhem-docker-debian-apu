@@ -1,4 +1,4 @@
-version: '3.8'
+version: '3.3'
 services:
     dbms:
         image: postgres:13-alpine
@@ -40,7 +40,7 @@ services:
             - fhem-network
         depends_on:
             - "dbms"
-#    influxdb:
+#    infl:
 #        image: influxdb:latest
 #        ports:
 #            - '8086:8086'
@@ -50,7 +50,7 @@ services:
 #            - INFLUXDB_DB=db0
 #            - INFLUXDB_ADMIN_USER=${INFLUXDB_USERNAME}
 #            - INFLUXDB_ADMIN_PASSWORD=${INFLUXDB_PASSWORD}
-#    chronograf:
+#    cgrf:
 #        image: chronograf:latest
 #        ports:
 #            - '127.0.0.1:8888:8888'
@@ -62,7 +62,7 @@ services:
 #            - INFLUXDB_URL=http://influxdb:8086
 #            - INFLUXDB_USERNAME=${INFLUXDB_USERNAME}
 #            - INFLUXDB_PASSWORD=${INFLUXDB_PASSWORD}
-#    grafana:
+#    grfn:
 #        image: grafana/grafana:latest
 #        ports:
 #            - '3000:3000'
@@ -74,6 +74,18 @@ services:
 #        environment:
 #            - GF_SECURITY_ADMIN_USER=${GRAFANA_USERNAME}
 #            - GF_SECURITY_ADMIN_PASSWORD=${GRAFANA_PASSWORD}
+#    brdg:
+#        image: oznu/homebridge:raspberry-pi
+#        restart: always
+#        network_mode: host
+#        volumes:
+#            - ./config:/homebridge
+#        environment:
+#            - PGID=1000
+#            - PUID=1000
+#            - HOMEBRIDGE_CONFIG_UI=1
+#            - HOMEBRIDGE_CONFIG_UI_PORT=8080
+
 #volumes:
 #    influxdb-storage:
 #    chronograf-storage:
