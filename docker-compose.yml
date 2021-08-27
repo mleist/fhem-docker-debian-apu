@@ -74,17 +74,18 @@ services:
 #        environment:
 #            - GF_SECURITY_ADMIN_USER=${GRAFANA_USERNAME}
 #            - GF_SECURITY_ADMIN_PASSWORD=${GRAFANA_PASSWORD}
-#    brdg:
-#        image: oznu/homebridge:raspberry-pi
-#        restart: always
-#        network_mode: host
-#        volumes:
-#            - ./config:/homebridge
-#        environment:
-#            - PGID=1000
-#            - PUID=1000
-#            - HOMEBRIDGE_CONFIG_UI=1
-#            - HOMEBRIDGE_CONFIG_UI_PORT=8080
+    brdg:
+        image: oznu/homebridge:latest
+        restart: always
+        networks:
+            - fhem-network
+        volumes:
+            - ./homebridge:/homebridge
+        environment:
+            - PGID=1000
+            - PUID=1000
+            - HOMEBRIDGE_CONFIG_UI=1
+            - HOMEBRIDGE_CONFIG_UI_PORT=8080
 
 #volumes:
 #    influxdb-storage:
