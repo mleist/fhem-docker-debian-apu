@@ -45,18 +45,18 @@ services:
             - DOCKER_INFLUXDB_INIT_ADMIN_TOKEN=${INFLUXDB_INIT_ADMIN_TOKEN}
         networks:
             - fhem-network
-#    grfn:
-#        image: grafana/grafana:latest
-#        ports:
-#            - '3000:3000'
-#        volumes:
-#            - grafana-storage:/var/lib/grafana
-#            - ./grafana-provisioning/:/etc/grafana/provisioning
-#        depends_on:
-#            - influxdb
-#        environment:
-#            - GF_SECURITY_ADMIN_USER=${GRAFANA_USERNAME}
-#            - GF_SECURITY_ADMIN_PASSWORD=${GRAFANA_PASSWORD}
+    grfn:
+        image: grafana/grafana:latest
+        ports:
+            - '3000:3000'
+        volumes:
+            - ./grafana_data:/var/lib/grafana:rw
+            - ./grafana_provisioning:/etc/grafana/provisioning:rw
+        depends_on:
+            - infl
+        environment:
+            - GF_SECURITY_ADMIN_USER=${GRAFANA_USERNAME}
+            - GF_SECURITY_ADMIN_PASSWORD=${GRAFANA_PASSWORD}
     tgrf:
         image: telegraf:alpine
         restart: always
@@ -92,10 +92,6 @@ services:
             - DOCKER_INFLUXDB_INIT_BUCKET=mybucket
             - DOCKER_INFLUXDB_INIT_ADMIN_TOKEN=mytoken
 
-#volumes:
-#    influxdb-storage:
-#    chronograf-storage:
-#    grafana-storage:
 networks:
     fhem-network:
         driver: bridge
