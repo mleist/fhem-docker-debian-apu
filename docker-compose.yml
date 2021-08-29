@@ -31,8 +31,8 @@ services:
             TZ: Europe/Berlin
             FHEM_USB_DEV: ${FHEM_USB_DEV}
             # CONFIGTYPE: configDB  ## for configurationfrom database
-        devices:
-            - "${FHEM_USB_DEV}:${FHEM_USB_DEV}"
+        #devices:
+        #    - "${FHEM_USB_DEV}:${FHEM_USB_DEV}"
         networks:
             - fhem-network
     infl:

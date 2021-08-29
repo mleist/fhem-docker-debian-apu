@@ -44,7 +44,7 @@ insert USB stick
     root@stage0tmp:/opt/fhem-docker-debian-apu/stage1_apu_iso_builder# fdisk -l /dev/sdb
     Disk /dev/sdb: 14.92 GiB, 16025387008 bytes, 31299584 sectors
     Disk model: USB Flash Disk
-    ...
+    [...]
 
 copy ISO image to USB stick
 
@@ -99,4 +99,120 @@ stage2 done
 
 ## first start APU
 
-...
+      Booting `Debian GNU/Linux'
+    
+    Loading Linux 5.10.0-8-amd64 ...
+    Loading initial ramdisk ...
+    /dev/sda5: clean, 32110/3653632 files, 679036/14599168 blocks
+    
+    Debian GNU/Linux 11 {hostname} ttyS0
+    
+    {hostname} login: 
+
+## login into APU
+
+- username: root
+- password: passw0rd
+
+start "./first_boot.sh"
+
+    {hostname} login: root
+    Password: 
+    Linux {hostname} 5.10.0-8-amd64 #1 SMP Debian 5.10.46-4 (2021-08-03) x86_64
+    
+    The programs included with the Debian GNU/Linux system are free software;
+    the exact distribution terms for each program are described in the
+    individual files in /usr/share/doc/*/copyright.
+    
+    Debian GNU/Linux comes with ABSOLUTELY NO WARRANTY, to the extent
+    permitted by applicable law.
+    root@{hostname}:~# ./first_boot.sh 
+    This is the first boot
+    Cloning into 'fhem-docker-debian-apu'...
+    remote: Enumerating objects: 124, done.
+    [...]
+    Reading package lists... Done
+    Building dependency tree... Done
+    Reading state information... Done
+    All packages are up to date.
+    [...]
+    Reading package lists... Done
+    Building dependency tree... Done
+    root@{hostname}:~# 
+
+
+
+## install docker infrastructre
+
+
+### change username, passwords etc.
+
+    root@{hostname}:~# cd /opt/fhem-docker-debian-apu/
+    root@{hostname}:/opt/fhem-docker-debian-apu# 
+    root@{hostname}:/opt/fhem-docker-debian-apu# vi .env
+
+
+### 31_start_container_4_install.sh
+
+    root@{hostname}:/opt/fhem-docker-debian-apu# ./stage3_postinstall_apu/31_start_container_4_install.sh
+    Creating network "fhem-docker-debian-apu_fhem-network" with driver "bridge"
+    Creating network "fhem-docker-debian-apu_default" with the default driver
+    Pulling fhem (fhem/fhem:latest)...
+    latest: Pulling from fhem/fhem
+    [...]
+    Status: Downloaded newer image for fhem/fhem:latest
+    Pulling infl (influxdb:latest)...
+    latest: Pulling from library/influxdb
+    [...]
+    Status: Downloaded newer image for influxdb:latest
+    Pulling grfn (grafana/grafana:latest)...
+    latest: Pulling from grafana/grafana
+    [...]
+    Status: Downloaded newer image for grafana/grafana:latest
+    Pulling tgrf (telegraf:alpine)...
+    alpine: Pulling from library/telegraf
+    [...]
+    Status: Downloaded newer image for telegraf:alpine
+    Pulling brdg (oznu/homebridge:latest)...
+    latest: Pulling from oznu/homebridge
+    [...]
+    Status: Downloaded newer image for oznu/homebridge:latest
+    Creating fhem-docker-debian-apu_infl_1 ... done
+    Creating fhem-docker-debian-apu_fhem_1 ... done
+    Creating fhem-docker-debian-apu_brdg_1 ... done
+    Creating fhem-docker-debian-apu_grfn_1 ... done
+    Creating fhem-docker-debian-apu_tgrf_1 ... done
+    root@{hostname}:/opt/fhem-docker-debian-apu# 
+
+**wait**
+
+After the installation is complete, the Influxdb container will have terminated.
+
+### 32_finalize_influxdb.sh
+
+    root@{hostname}:/opt/fhem-docker-debian-apu# stage3_postinstall_apu/32_finalize_influxdb.sh
+    fhem-docker-debian-apu_infl_1 is up-to-date
+
+**wait**
+
+    root@{hostname}:/opt/fhem-docker-debian-apu# docker-compose exec infl influx org list
+    ID			Name
+    3810ea878cd66587	fhem_org
+
+
+### 41_config_influxdb.sh
+    root@{hostname}:/opt/fhem-docker-debian-apu# stage3_postinstall_apu/41_config_influxdb.sh
+    starting 41_config_influxdb.sh ...
+    creating buckets
+    ID			Name		Retention	Shard group duration	Organization ID
+    cfe7a9c3106b511b	fhem_fast	72h0m0s		24h0m0s			3810ea878cd66587
+    ID			Name		Retention	Shard group duration	Organization ID
+    b37766d36f6149f4	fhem_mid	1344h0m0s	24h0m0s			3810ea878cd66587
+    ID			Name		Retention	Shard group duration	Organization ID
+    90dafd08b131117f	_monitoring	168h0m0s	24h0m0s			3810ea878cd66587
+    d7a8c52d24ca6f61	_tasks		72h0m0s		24h0m0s			3810ea878cd66587
+    cfe7a9c3106b511b	fhem_fast	72h0m0s		24h0m0s			3810ea878cd66587
+    60192763cc01c033	fhem_long	87360h0m0s	168h0m0s		3810ea878cd66587
+    b37766d36f6149f4	fhem_mid	1344h0m0s	24h0m0s			3810ea878cd66587
+    41_config_influxdb.sh exit
+
