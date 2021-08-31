@@ -98,7 +98,7 @@ d-i mirror/http/directory string /debian
 d-i mirror/http/proxy string
 
 tasksel tasksel/first multiselect ssh-server 
-d-i pkgsel/include string joe aptitude gnupg rsync docker-compose wget
+d-i pkgsel/include string joe aptitude gnupg rsync wget
 d-i pkgsel/upgrade select none
 
 # Disable that annoying WEP key dialog.
