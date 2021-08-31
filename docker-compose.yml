@@ -45,6 +45,7 @@ services:
         volumes:
             - ./influx_data:/var/lib/influxdb2:rw
             - ./influx_conf:/etc/influxdb2:rw
+            - ./influx_backup:/influx_backup:rw
         environment:
             - INFLUXDB_DB=db0
             - INFLUXDB_ADMIN_USER=${INFLUXDB_USERNAME}
