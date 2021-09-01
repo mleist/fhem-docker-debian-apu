@@ -50,6 +50,8 @@ services:
             - INFLUXDB_DB=db0
             - INFLUXDB_ADMIN_USER=${INFLUXDB_USERNAME}
             - INFLUXDB_ADMIN_PASSWORD=${INFLUXDB_PASSWORD}
+            - INFLUXD_STORAGE_WAL_FSYNC_DELAY=0ms
+            - INFLUXD_STORAGE_COMPACT_FULL_WRITE_COLD_DURATION=0h15m0s
             - DOCKER_INFLUXDB_INIT_MODE=setup
             - DOCKER_INFLUXDB_INIT_USERNAME=${INFLUXDB_INIT_USERNAME}
             - DOCKER_INFLUXDB_INIT_PASSWORD=${INFLUXDB_INIT_PASSWORD}
@@ -63,6 +65,7 @@ services:
         image: grafana/grafana:latest
         ports:
             - '3000:3000'
+        restart: always
         volumes:
             - ./grafana_data:/var/lib/grafana:rw
             - ./grafana_provisioning:/etc/grafana/provisioning:rw

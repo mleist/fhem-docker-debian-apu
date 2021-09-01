@@ -2,6 +2,7 @@
 my_name=$(basename -- "$0")
 
 source /opt/fhem-docker-debian-apu/.env
+cd /opt/fhem-docker-debian-apu
 
 echo "starting $my_name ..."
 
