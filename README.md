@@ -7,9 +7,9 @@
 ## build stage0 VM
 
 - create Image with 4 GB RAM , 4 CPUs, 20 GB HD, UEFI-Boot: 'fhem_stage0.vmwarevm'
-- boot from debian-11.0.0-amd64-netinst.iso
+- boot from debian-bookworm-DI-rc3-amd64-netinst.iso
 - [Advanced options ...] -> [... Automated install] -> Key 'E' & add:
-  > ... auto=true url=https://raw.githubusercontent.com/mleist/fhem-docker-debian-apu/main/stage0_img_builder/preseed.txt ...
+  > ... auto=true url=https://raw.githubusercontent.com/mleist/fhem-docker-debian-apu/ipu/stage0_img_builder/preseed.txt ...
 - Press F10
 - wait for installed system
 
@@ -26,9 +26,10 @@
 
 ## create stage1 ISO image
 
-    root@debian:~# /bin/sh -c "cd /opt; git clone git@github.com:mleist/fhem-docker-debian-apu.git"
+    root@debian:~# /bin/sh -c "cd /opt; git clone --branch ipu git@github.com:mleist/fhem-docker-debian-apu.git"
     root@debian:~# cd /opt/fhem-docker-debian-apu/stage1_apu_iso_builder/
-    root@debian:/opt/fhem-docker-debian-apu/stage1_apu_iso_builder# ./build apu64 --force-root
+    root@debian:/opt/fhem-docker-debian-apu/stage1_apu_iso_builder# ./build ipu64 --force-root
+
     /opt/fhem-docker-debian-apu/stage1_apu_iso_builder/images/debian-11-amd64-CD-1.iso
     root@debian:/opt/fhem-docker-debian-apu/stage1_apu_iso_builder# ls -l images/
     total 329736
@@ -37,7 +38,7 @@
 
 
 
-## build USB stick for APU
+## build USB stick for IPU
 
 insert USB stick
 
@@ -60,7 +61,7 @@ Remove the USB stick and continue with stage2
 
 
 
-## install the APU in stage2
+## install the IPU in stage2
 
 
     SeaBIOS (version rel-1.12.1.3-0-g300e8b70)
@@ -97,7 +98,7 @@ F10 pressed
 
 stage2 done
 
-## first start APU
+## first start IPU
 
       Booting `Debian GNU/Linux'
     
@@ -109,7 +110,7 @@ stage2 done
     
     {hostname} login: 
 
-## login into APU
+## login into IPU
 
 - username: root
 - password: passw0rd

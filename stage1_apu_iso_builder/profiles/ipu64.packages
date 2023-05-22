@@ -1,10 +1,5 @@
 net-tools
 ntp
-firmware-realtek
-firmware-brcm80211
-firmware-atheros
-firmware-misc-nonfree
-firmware-iwlwifi
 wireless-tools
 wpasupplicant
 iw
