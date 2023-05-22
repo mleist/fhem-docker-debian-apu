@@ -30,6 +30,12 @@ d-i partman-auto/method string regular
 # Custom partition layout: both /boot and root in ext4, with noatime option
 d-i partman-auto/expert_recipe string                         \
       boot-root ::                                            \
+              538 538 1075 free                               \
+                      $iflabel{ gpt }                         \
+                      $reusemethod{ }                         \
+                      method{ efi }                           \
+                      format{ }                               \
+              .                                               \
               128 50 128 ext4                                 \
                       $primary{ } $bootable{ }                \
                       method{ format } format{ }              \
