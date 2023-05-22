@@ -9,10 +9,10 @@ d-i passwd/make-user boolean false
 # Any hostname and domain names assigned from dhcp take precedence over
 # values set here. However, setting the values still prevents the questions
 # from being shown, even if values come from dhcp.
-d-i netcfg/get_hostname string ha-apu1
+d-i netcfg/get_hostname string ipu
 # d-i netcfg/get_hostname seen false
 
-d-i netcfg/choose_interface select enp1s0
+d-i netcfg/choose_interface select enp2s0
 
 # Automatically label the disk without asking
 d-i partman-auto/choose_recipe select boot-root
@@ -121,7 +121,7 @@ d-i hw-detect/load_firmware boolean true
 #    in-target rm -f /EMPTY;
 
 d-i preseed/late_command string \
-    wget https://raw.githubusercontent.com/mleist/fhem-docker-debian-apu/main/stage3_postinstall_apu/first_boot.sh -O /target/root/first_boot.sh ; \
+    wget https://raw.githubusercontent.com/mleist/fhem-docker-debian-apu/ipu/stage3_postinstall_apu/first_boot.sh -O /target/root/first_boot.sh ; \
     chmod 700 /target/root/first_boot.sh; \
     in-target sed -i 's/#PasswordAuthentication yes/PasswordAuthentication no/g' /etc/ssh/sshd_config; \
     in-target mkdir -p /root/.ssh; \
