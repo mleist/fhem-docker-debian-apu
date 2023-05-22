@@ -60,6 +60,12 @@ d-i partman-auto/expert_recipe string                         \
 # Skip question about not having swap partition
 partman-basicfilesystems partman-basicfilesystems/no_swap boolean false
 
+# Force UEFI booting ('BIOS compatibility' will be lost). Default: false.
+d-i partman-efi/non_efi_system boolean true
+
+# Ensure the partition table is GPT - this is required for EFI
+d-i partman-partitioning/choose_label select gpt
+d-i partman-partitioning/default_label string gpt
 
 d-i grub-installer/with_other_os  boolean false
 d-i grub-installer/bootdev  string default
