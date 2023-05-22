@@ -29,12 +29,11 @@
     root@debian:~# /bin/sh -c "cd /opt; git clone --branch ipu git@github.com:mleist/fhem-docker-debian-apu.git"
     root@debian:~# cd /opt/fhem-docker-debian-apu/stage1_apu_iso_builder/
     root@debian:/opt/fhem-docker-debian-apu/stage1_apu_iso_builder# ./build ipu64 --force-root
-
-    /opt/fhem-docker-debian-apu/stage1_apu_iso_builder/images/debian-11-amd64-CD-1.iso
+    /opt/fhem-docker-debian-apu/stage1_apu_iso_builder/images/debian-12-amd64-CD-1.iso
     root@debian:/opt/fhem-docker-debian-apu/stage1_apu_iso_builder# ls -l images/
-    total 329736
-    -rw-r--r-- 1 root root 337641472 Aug 26 11:26 debian-11-amd64-CD-1.iso
-    -rw-r--r-- 1 root root      4945 Aug 26 11:26 debian-11-amd64-CD-1.list.gz
+    total 350220
+    -rw-r--r-- 1 root root 358612992 May 22 20:32 debian-12-amd64-CD-1.iso
+    -rw-r--r-- 1 root root      4906 May 22 20:32 debian-12-amd64-CD-1.list.gz
 
 
 
@@ -51,10 +50,10 @@ copy ISO image to USB stick
 
 **Check three times if the unit address is correct**
 
-    root@stage0tmp:/opt/fhem-docker-debian-apu/stage1_apu_iso_builder# dd if=images/debian-11-amd64-CD-1.iso of=/dev/sdb bs=16M
-    20+1 records in
-    20+1 records out
-    337641472 bytes (338 MB, 322 MiB) copied, 52.4693 s, 6.4 MB/s
+    root@stage0tmp:/opt/fhem-docker-debian-apu/stage1_apu_iso_builder# dd if=images/debian-12-amd64-CD-1.iso of=/dev/sdb bs=16M
+    21+1 records in
+    21+1 records out
+    358612992 bytes (359 MB, 342 MiB) copied, 68.6176 s, 5.2 MB/s
     root@stage0tmp:/opt/fhem-docker-debian-apu/stage1_apu_iso_builder# sync
 
 Remove the USB stick and continue with stage2
