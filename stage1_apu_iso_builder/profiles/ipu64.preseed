@@ -44,7 +44,7 @@ d-i partman-auto/expert_recipe string                         \
               .                                               \
 
 # Skip question about not having swap partition
-partman-basicfilesystems partman-basicfilesystems/no_swap boolean false
+d-i partman-basicfilesystems/no_swap boolean false
 
 # Force UEFI booting ('BIOS compatibility' will be lost). Default: false.
 d-i partman-efi/non_efi_system boolean true
