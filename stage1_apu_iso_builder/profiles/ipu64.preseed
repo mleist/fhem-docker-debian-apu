@@ -23,6 +23,8 @@ d-i partman/confirm_nooverwrite boolean true
 d-i partman-auto/disk string /dev/nvme0n1
 d-i partman-auto/purge_lvm_from_device boolean true
 d-i partman-lvm/confirm boolean true
+# Skip question about not having swap partition
+d-i partman-basicfilesystems/no_swap boolean false
 
 # Disk partitioning method
 d-i partman-auto/method string regular
@@ -42,9 +44,6 @@ d-i partman-auto/expert_recipe string                         \
                       mountpoint{ / }                         \
                       options/noatime{ noatime }              \
               .                                               \
-
-# Skip question about not having swap partition
-d-i partman-basicfilesystems/no_swap boolean false
 
 # Force UEFI booting ('BIOS compatibility' will be lost). Default: false.
 d-i partman-efi/non_efi_system boolean true
