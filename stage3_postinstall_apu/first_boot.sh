@@ -8,7 +8,7 @@ if [ ! -f $FLAG ]; then
 
    cd /opt
    ssh-keyscan -H github.com >> /root/.ssh/known_hosts
-   git clone git@github.com:mleist/fhem-docker-debian-apu.git
+   git clone  --branch ipu git@github.com:mleist/fhem-docker-debian-apu.git
 
    /opt/fhem-docker-debian-apu/stage3_postinstall_apu/11_install_docker.sh
    /opt/fhem-docker-debian-apu/stage3_postinstall_apu/12_install_ctop.sh
