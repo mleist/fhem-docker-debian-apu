@@ -36,26 +36,12 @@ d-i partman-auto/expert_recipe string                         \
                       method{ efi }                           \
                       format{ }                               \
               .                                               \
-              128 50 128 ext4                                 \
-                      $primary{ } $bootable{ }                \
-                      method{ format } format{ }              \
-                      use_filesystem{ } filesystem{ ext4 }    \
-                      mountpoint{ /boot }                     \
-                      options/noatime{ noatime }              \
-              .                                               \
               500 10000 -1 ext4                               \
                       method{ format } format{ }              \
                       use_filesystem{ } filesystem{ ext4 }    \
                       mountpoint{ / }                         \
                       options/noatime{ noatime }              \
               .                                               \
-              4096 4096 4096 ext4                             \
-                      $primary{ }                             \
-                      method{ format } format{ }              \
-                      use_filesystem{ } filesystem{ ext4 }    \
-                      mountpoint{ /backups }                  \
-                      options/noatime{ noatime }              \
-              .
 
 # Skip question about not having swap partition
 partman-basicfilesystems partman-basicfilesystems/no_swap boolean false
@@ -108,8 +94,10 @@ d-i mirror/country string manual
 d-i mirror/http/hostname string deb.debian.org
 d-i mirror/http/directory string /debian
 d-i mirror/http/proxy string
+d-i mirror/suite string bookworm
+d-i mirror/udeb/suite string bookworm
 
-tasksel tasksel/first multiselect ssh-server 
+tasksel tasksel/first multiselect standard, ssh-server
 d-i pkgsel/include string joe aptitude gnupg rsync wget git
 d-i pkgsel/upgrade select none
 
